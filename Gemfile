@@ -16,6 +16,7 @@ group :development, :test do
     gem 'activerecord', '>= 5.2.0.beta2', '< 5.3'
     gem 'railties', '>= 5.2.0.beta2', '< 5.3'
   end
-end
 
-gem 'sqlite3'
+  gem 'benchmark-ips'
+  gem 'sqlite3'
+end

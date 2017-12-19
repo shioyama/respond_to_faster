@@ -1,13 +1,24 @@
 RSpec.describe RespondToFaster do
-  before { 2.times { Post.create } }
+  before do
+    2.times do |i|
+      Post.create(title: "title #{i}",
+                  content: "content #{i}")
+    end
+  end
 
   context "select" do
-    it "defines methods for all values returned from query" do
-      post = Post.select("title as foo, content as bar").first
+    let(:posts) { Post.select("title as foo, content as bar") }
 
+    it "returns correct values" do
+      expect(posts.map { |p| [p.foo, p.bar] }).to match_array([["title 0", "content 0"], ["title 1", "content 1"]])
+    end
+
+    it "defines methods for all values returned from query" do
       aggregate_failures do
-        expect(post).to have_method(:foo)
-        expect(post).to have_method(:bar)
+        posts.each do |post|
+          expect(post).to have_method(:foo)
+          expect(post).to have_method(:bar)
+        end
       end
     end
   end

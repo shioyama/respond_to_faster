@@ -1,4 +1,5 @@
 require "bundler/setup"
+require "active_record"
 require "respond_to_faster"
 
 require "database"
