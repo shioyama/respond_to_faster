@@ -67,4 +67,23 @@ RSpec.describe RespondToFaster do
       end
     end
   end
+
+  describe "ancestors of singleton classes" do
+    it "has only one extra ancestor" do
+      initialized_post = Post.new
+      posts = Post.select("title as foo")
+      first_post = posts.first
+      last_post = posts.last
+
+      aggregate_failures "ancestors compared with class ancestors" do
+        expect(first_post.singleton_class.ancestors.size).to eq(Post.ancestors.size + 2)
+        expect(last_post.singleton_class.ancestors.size).to eq(Post.ancestors.size + 2)
+      end
+
+      aggregate_failures "ancestors compared with initialized model" do
+        expect(first_post.singleton_class.ancestors.size).to eq(initialized_post.singleton_class.ancestors.size + 1)
+        expect(last_post.singleton_class.ancestors.size).to eq(initialized_post.singleton_class.ancestors.size + 1)
+      end
+    end
+  end
 end
