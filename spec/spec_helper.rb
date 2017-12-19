@@ -1,6 +1,14 @@
 require "bundler/setup"
 require "respond_to_faster"
 
+require "database"
+require "models"
+
+RespondToFaster::Test::Database.connect
+
+# for in-memory sqlite database
+RespondToFaster::Test::Database.auto_migrate
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -12,3 +20,5 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+Dir[File.expand_path("../matchers/*.rb", __FILE__)].each(&method(:require))
