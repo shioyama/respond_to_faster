@@ -1,4 +1,13 @@
-# RespondToFaster :rocket:
+RespondToFaster :rocket:
+========================
+
+[![Gem Version](https://badge.fury.io/rb/respond_to_faster.svg)][gem]
+[![Build Status](https://travis-ci.org/shioyama/respond_to_faster.svg?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/shioyama/respond_to_faster.svg)][gemnasium]
+
+[gem]: https://rubygems.org/gems/respond_to_faster
+[travis]: https://travis-ci.org/shioyama/respond_to_faster
+[gemnasium]: https://gemnasium.com/shioyama/respond_to_faster
 
 Speed up method response times on results from custom aliased ActiveRecord
 queries.
