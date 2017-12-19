@@ -6,7 +6,15 @@ RSpec.describe RespondToFaster do
     end
   end
 
-  context "select" do
+  it "removes respond_to? override" do
+    expect(ActiveModel::AttributeMethods.instance_methods).not_to include(:respond_to?)
+  end
+
+  it "removes method_missing override" do
+    expect(ActiveModel::AttributeMethods.instance_methods).not_to include(:method_missing)
+  end
+
+  describe "select" do
     let(:posts) { Post.select("title as foo, content as bar") }
 
     it "returns correct values" do
@@ -19,6 +27,43 @@ RSpec.describe RespondToFaster do
           expect(post).to have_method(:foo)
           expect(post).to have_method(:bar)
         end
+      end
+    end
+
+    it "never calls method_missing" do
+      post = posts.first
+      expect(post).not_to receive(:method_missing)
+      post.foo
+    end
+  end
+
+  describe "#respond_to?" do
+    context "model initialized" do
+      let(:post) { Post.new }
+
+      it "returns true if attribute is defined" do
+        expect(post.respond_to?(:title)).to eq(true)
+      end
+
+      it "returns false if attribute is not defined" do
+        expect(post.respond_to?(:xyz)).to eq(false)
+      end
+    end
+
+    context "result returned from custom query" do
+      let(:post) { Post.select("title as foo, content as bar").first }
+
+      it "returns true if attribute is a value returned from query" do
+        expect(post.respond_to?(:foo)).to eq(true)
+      end
+
+      it "returns false if attribute is a value returned from query" do
+        expect(post.respond_to?(:title)).to eq(false)
+      end
+
+      it "does not call method_missing" do
+        expect(post).not_to receive(:method_missing)
+        post.foo
       end
     end
   end
