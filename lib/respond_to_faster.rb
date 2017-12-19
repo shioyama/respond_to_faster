@@ -1,3 +1,4 @@
+require "active_record"
 require "respond_to_faster/version"
 
 module RespondToFaster
