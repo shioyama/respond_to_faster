@@ -14,7 +14,13 @@ RSpec.describe RespondToFaster do
     expect(ActiveModel::AttributeMethods.instance_methods).not_to include(:method_missing)
   end
 
-  describe "select" do
+  describe ".find_by" do
+    it "works like normal" do
+      expect(Post.find_by(title: "title 1")).to eq(Post.last)
+    end
+  end
+
+  describe ".select" do
     let(:posts) { Post.select("title as foo, content as bar") }
 
     it "returns correct values" do
@@ -34,6 +40,33 @@ RSpec.describe RespondToFaster do
       post = posts.first
       expect(post).not_to receive(:method_missing)
       post.foo
+    end
+  end
+
+  describe ".select on association" do
+    let(:post) { Post.first }
+    let(:comments) { post.comments.select("content as foo, author_id as bar") }
+    before do
+      post.comments.create(content: "foocontent", author_id: 3)
+    end
+
+    it "returns correct values" do
+      expect(comments.map { |c| [c.foo, c.bar] }).to eq([["foocontent", 3]])
+    end
+
+    it "defines methods for all values returned from query" do
+      aggregate_failures do
+        comments.each do |comment|
+          expect(comment).to have_method(:foo)
+          expect(comment).to have_method(:bar)
+        end
+      end
+    end
+
+    it "never calls method_missing" do
+      comment = comments.first
+      expect(comment).not_to receive(:method_missing)
+      comment.foo
     end
   end
 
