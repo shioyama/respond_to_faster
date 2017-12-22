@@ -21,7 +21,7 @@ gem 'respond_to_faster', '~> 0.1.0'
 ```
 
 That's it! Read on to learn about what RespondToFaster is doing under the hood
-(or checkout the source code, it's only 20 lines long!)
+(or checkout the source code, it's only a dozen lines long!)
 
 ## Background
 
