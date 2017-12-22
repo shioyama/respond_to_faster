@@ -17,7 +17,7 @@ queries.
 Just add the gem to your Gemfile:
 
 ```ruby
-gem 'respond_to_faster', '~> 0.1.0'
+gem 'respond_to_faster', '~> 0.2.0'
 ```
 
 That's it! Read on to learn about what RespondToFaster is doing under the hood
