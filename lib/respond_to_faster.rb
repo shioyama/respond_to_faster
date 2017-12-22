@@ -15,5 +15,3 @@ module RespondToFaster
 end
 
 ActiveRecord::Base.extend RespondToFaster
-ActiveModel::AttributeMethods.send(:remove_method, :respond_to?)
-ActiveModel::AttributeMethods.send(:remove_method, :method_missing)

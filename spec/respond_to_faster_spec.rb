@@ -6,11 +6,11 @@ RSpec.describe RespondToFaster do
     end
   end
 
-  it "removes respond_to? override" do
+  pending "removes respond_to? override" do
     expect(ActiveModel::AttributeMethods.instance_methods).not_to include(:respond_to?)
   end
 
-  it "removes method_missing override" do
+  pending "removes method_missing override" do
     expect(ActiveModel::AttributeMethods.instance_methods).not_to include(:method_missing)
   end
 
@@ -117,6 +117,16 @@ RSpec.describe RespondToFaster do
         expect(first_post.singleton_class.ancestors.size).to eq(initialized_post.singleton_class.ancestors.size + 1)
         expect(last_post.singleton_class.ancestors.size).to eq(initialized_post.singleton_class.ancestors.size + 1)
       end
+    end
+  end
+
+  describe "#init_with" do
+    it "works with virtual attributes" do
+      post = Post.select("title as foo").first
+      dumped = YAML.load(YAML.dump(post))
+
+      expect(post.foo).to eq("title 0")
+      expect(dumped.foo).to eq("title 0")
     end
   end
 end
