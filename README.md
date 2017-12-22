@@ -91,8 +91,10 @@ ActiveRecord still relies on this (very slow) mechanism to make the magic work.
 But this is a high price to pay for some simple magic. This gem instead
 *defines the methods* on a module included into the singleton classes of the
 objects returned, so that you never need to go to `method_missing`. This makes
-calling these accessors things significantly faster, as much as 5-10 times
-faster.
+calling these accessors significantly faster, as much as 5-10 times faster.
+While you pay a price when instantiating the objects, if you access the methods
+a couple times on each instance, you should see an overall drop of between
+20-50% in execution time.
 
 ## Caveats
 
