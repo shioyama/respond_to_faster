@@ -79,36 +79,25 @@ alternative.
 
 ## What this gem does
 
-So what this gem does is to *remove these overrides*, which have been around
-since the dawn of Ruby on Rails. Not just tweak them, or override them, but
-**remove them**.
+The reality is that in the vast majority of cases, you don't need this
+`method_missing` override. AR has grown over the years to the point where most
+attribute methods are defined, so these fallbacks are not necessary.
 
-Here is the code that does this, just two lines:
-
-```ruby
-ActiveModel::AttributeMethods.send(:remove_method, :respond_to?)
-ActiveModel::AttributeMethods.send(:remove_method, :method_missing)
-```
-
-For the vast majority of cases, *this will have no impact on your ActiveRecord
-objects*. AR has grown over the years to the point where most attribute methods
-are defined, so these fallbacks are not necessary.
-
-The one exception is the example earlier with the custom aliased query. In this
-case, depending on the query, some custom attributes are needed on the objects
-returned, and ActiveRecord still relies on this (very slow) mechanism to make
-the magic work.
+But there is one case where you do: so-called "virtual columns". This is the
+type of query mentioned at the top of this readme. In this case, depending on
+the query, some custom attributes are needed on the objects returned, and
+ActiveRecord still relies on this (very slow) mechanism to make the magic work.
 
 But this is a high price to pay for some simple magic. This gem instead
-*defines the methods* on the singleton class of the objects returned, so that
-you never need to go to `method_missing`. This makes things **much faster**, as
-much as 5-10 times faster.
+*defines the methods* on a module included into the singleton classes of the
+objects returned, so that you never need to go to `method_missing`. This makes
+calling these accessors things significantly faster, as much as 5-10 times
+faster.
 
 ## Caveats
 
 If you don't use any custom querying with aliases like the one above, this gem
-might not do much for you. It should make `respond_to?` a bit faster, but you
-may not even notice that.
+will not do much for you.
 
 However, if you've got some crazy heavy SQL logic somewhere deep in your
 application, and you're finding it takes forever, give this gem a shot and tell
