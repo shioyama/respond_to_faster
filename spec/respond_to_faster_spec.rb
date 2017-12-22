@@ -41,6 +41,12 @@ RSpec.describe RespondToFaster do
       expect(post).not_to receive(:method_missing)
       post.foo
     end
+
+    it "works with no results in result set" do
+      expect {
+        expect(Post.select("title as foo").where(title: "baz").to_a).to eq([])
+      }.not_to raise_error
+    end
   end
 
   describe ".select on association" do
