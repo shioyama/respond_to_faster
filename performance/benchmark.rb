@@ -28,20 +28,31 @@ puts "Done!\n"
 
 def benchmark(time)
   Benchmark.ips(time) do |x|
-    one_col    = Post.select("title as foo").to_a
-    two_cols   = Post.select("title as foo, subtitle as bar").to_a
-    three_cols = Post.select("title as foo, subtitle as bar, content as baz").to_a
+    post_by_select = Post.select("title as foo").first
+    post_by_find   = Post.first
 
-    x.report("selecting one column") do
-      one_col.map { |obj| obj.foo }
+    x.report("select query accessor") do
+      post_by_select.foo
     end
 
-    x.report("selecting two columns") do
-      two_cols.map { |obj| obj.foo; obj.bar }
+    x.report("find query accessor") do
+      post_by_find.title
     end
 
-    x.report("selecting three columns") do
-      three_cols.map { |obj| obj.foo; obj.bar; obj.baz }
+    x.report("instantiating with select on two columns") do
+      Post.select("title as foo, content as bar").to_a
+    end
+
+    x.report("instantiating with find") do
+      Post.all.to_a
+    end
+
+    x.report("together - select on two columns") do
+      Post.select("title as foo, content as bar").map { |p| p.foo; p.bar }
+    end
+
+    x.report("together - find") do
+      Post.all.map { |p| p.title; p.content }
     end
   end
 end
